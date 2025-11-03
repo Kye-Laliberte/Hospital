@@ -98,11 +98,23 @@ def addSideEffect(med_id, description, severity, overdose, db_path="app.db"):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
-        # Validate medication exists
-        cursor.execute("SELECT 1 FROM Medication WHERE id = ?;", (med_id,))
+
+        # Check if medication exists first
+        cursor.execute("SELECT 1 FROM Medication WHERE Med_id = ?;", (med_id,))
         if not cursor.fetchone():
-            print(f"Error: Medication ID {med_id} does not exist.")
+            print(f"Error: Medication with ID {med_id} does not exist.")
             return
+
+        #Check for duplicate side effect
+        cursor.execute("""
+            SELECT side_effect_id FROM side_effects
+            WHERE Med_id = ? AND description = ? AND severity = ? AND overdose = ?;
+        """, (med_id, description, severity, overdose))
+        exist = cursor.fetchone()
+        if exist:
+            print(f"Side effect already exists for Medication ID {med_id} (Effect ID: {exist[0]}).")
+            return
+        
         cursor.execute("""
             INSERT INTO side_effects (Med_id, description, severity, overdose)
             VALUES (?, ?, ?, ?);

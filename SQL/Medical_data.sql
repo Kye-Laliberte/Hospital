@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS  side_effects(
     side_effect_id INTEGER PRIMARY KEY AUTOINCREMENT,
     Med_id INTEGER NOT NULL,
     description TEXT DEFAULT 'none',
-    severity INTEGER DEFAULT 0 CHECK(severity>0),
+    severity INTEGER not null DEFAULT 0 CHECK(severity>0),
     overdose INTEGER not null DEFAULT 1  CHECK(overdose>0),
     FOREIGN KEY(Med_id)REFERENCES Medication(Med_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
