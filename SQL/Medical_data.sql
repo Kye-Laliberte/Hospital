@@ -10,6 +10,10 @@ CREATE TABLE IF NOT EXISTS Doctors(
 
 );
 
+
+
+
+
 CREATE TABLE IF NOT EXISTS Medication(    
     Med_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT  NOT NULL,
@@ -32,19 +36,25 @@ CREATE TABLE IF NOT EXISTS  side_effects(
 
 CREATE TABLE IF NOT EXISTS Patients(
     patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    doctor_id INTEGER NOT null,
     gender TEXT CHECK (gender in('Male','Female','Other')),
     first_name TEXT NOT NULL CHECK(LENGTH(first_name) > 1),
     last_name TEXT NOT NULL CHECK(LENGTH(last_name) > 1),
-    date_of_birth DATE NOT NULL CHECK(date_of_birth<=DATE('now')),
+    date_of_birth DATE NOT NULL,
     email TEXT UNIQUE COLLATE NOCASE NOT null,
     phone TEXT not null CHECK (LENGTH(phone) >= 7),
     address TEXT not null,
     STATUS TEXT NOT NULL CHECK(STATUS IN ('active','discharged','deceased')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(doctor_id)REFERENCES Doctors(doctor_id) ON DELETE CASCADE on UPDATE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     
+
+CREATE TABLE IF NOT EXISTS Patient_Doctor(
+    patient_id INTEGER NOT NULL,
+    doctor_id INTEGER NOT NULL,
+    PRIMARY KEY (patient_id, doctor_id),
+    FOREIGN KEY(patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
+    FOREIGN KEY(doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS Prescriptions(
     pharmacy_id INTEGER PRIMARY key AUTOINCREMENT,
@@ -80,15 +90,3 @@ VALUES
 (2, 'Hypoglycemia', 5, 5),
 (3, 'Drowsiness', 3, 20);
 
--- Insert Patients linked to Doctors
-INSERT INTO Patients (doctor_id, gender, first_name, last_name, date_of_birth, email, phone, address, STATUS)
-VALUES
-(1, 'Female', 'Jane', 'Doe', '1985-06-15', 'jane.doe@example.com', '5551112222', '123 Main St', 'active'),
-(2, 'Male', 'John', 'Smith', '1990-09-20', 'john.smith@example.com', '5553334444', '456 Elm St', 'active');
-
--- Insert Prescriptions linking Patients, Doctors, and Medications
-INSERT INTO Prescriptions (doctor_id, patient_id, Med_id)
-VALUES
-(1, 1, 1),  -- Alice prescribed Aspirin to Jane
-(2, 2, 2),  -- Bob prescribed Insulin to John
-(1, 1, 3);  -- Alice prescribed Cough Syrup to Jane
