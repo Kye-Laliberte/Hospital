@@ -29,8 +29,8 @@ def addPrescription(patient_id, doctor_id, med_id, db_path="app.db"):
             print("Doctor has now been add your listing")
 
         cursor.execute("""
-            INSERT INTO Prescriptions (doctor_id, patient_id, Med_id)
-            VALUES (?, ?, ?);""",(doctor_id,patient_id,med_id))
+            INSERT INTO Prescriptions (doctor_id, patient_id, Med_id,STATUS)
+            VALUES (?, ?, ?);""",(doctor_id,patient_id,med_id,'active'))
         
         conn.commit()
 

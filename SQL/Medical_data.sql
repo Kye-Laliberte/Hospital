@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS Prescriptions(
     doctor_id INTEGER NOT NULL,
     patient_id INTEGER not NULL,
     Med_id INTEGER NOT NULL,
+    STATUS TEXT NOT NULL CHECK(STATUS IN ('active', 'inactive', 'discontinued')),
     date_of_prescription DATE DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(patient_id) REFERENCES Patients(patient_id)
     ON DELETE CASCADE
@@ -70,23 +71,4 @@ CREATE TABLE IF NOT EXISTS Prescriptions(
 );
 
 
-
-INSERT INTO Doctors (first_name, last_name, department, phone)
-VALUES
-('Alice', 'Smith', 'Cardiology', '5551234567'),
-('Bob', 'Johnson', 'Neurology', '5559876543');
-
--- Insert Medication
-INSERT INTO Medication (name, dosage, MedicationType)
-VALUES
-('Aspirin', 500, 'tablet'),
-('Insulin', 10, 'Injection'),
-('Cough Syrup', 15, 'liquid');
-
--- Insert Side Effects linked to Medication
-INSERT INTO side_effects (Med_id, description, severity, overdose)
-VALUES
-(1, 'Stomach upset', 2, 10),
-(2, 'Hypoglycemia', 5, 5),
-(3, 'Drowsiness', 3, 20);
 

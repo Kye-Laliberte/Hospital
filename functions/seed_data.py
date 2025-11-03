@@ -66,12 +66,12 @@ def seed_data(db_path="app.db"):
     cursor.execute("SELECT COUNT(*) FROM Prescriptions;")
     if cursor.fetchone()[0] == 0:
         prescriptions = [
-            (1, 1, 1),  # Doctor 1 → Patient 1 → Medication 1
-            (2, 2, 2),  # Doctor 2 → Patient 2 → Medication 2
+            (1, 1,'active', 1),  # Doctor 1 → Patient 1 → Medication 1
+            (2, 2,'active', 2),  # Doctor 2 → Patient 2 → Medication 2
         ]
         cursor.executemany("""
-            INSERT INTO Prescriptions (doctor_id, patient_id, Med_id)
-            VALUES (?, ?, ?);
+            INSERT INTO Prescriptions (doctor_id, patient_id, STATUS ,Med_id)
+            VALUES (?, ?, ?,?);
         """, prescriptions)
 
     conn.commit()
